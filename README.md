@@ -4,7 +4,6 @@
   <h1>BlackoutSOL</h1>
   <p><strong>Advanced Privacy Layer for Solana Transactions</strong></p>
 
-  [![Build Status](https://img.shields.io/github/workflow/status/blackoutsol/blackoutsol/CI)](https://github.com/blackoutsol/blackoutsol/actions)
   [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
   [![Solana](https://img.shields.io/badge/solana-1.16-blueviolet)](https://solana.com/)
   [![Tests](https://img.shields.io/badge/tests-passing-brightgreen)](#)
