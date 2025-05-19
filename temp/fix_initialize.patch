@@ -1,0 +1,10 @@
+--- initialize.rs.old	2025-05-16 20:29:00
++++ initialize.rs	2025-05-16 20:29:30
+@@ -9,7 +9,6 @@
+ use crate::errors::BlackoutError;
+ use crate::utils::{
+     verify_hyperplonk_proof,
+-    extract_splits,
+     calculate_hops,
+     calculate_expire_block,
+     zero_hop_cost,

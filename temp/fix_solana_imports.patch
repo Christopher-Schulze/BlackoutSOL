@@ -1,0 +1,11 @@
+--- solana_imports.rs.old	2025-05-16 20:27:30
++++ solana_imports.rs	2025-05-16 20:28:00
+@@ -5,7 +5,7 @@
+ //! nur an einer Stelle aktualisiert werden müssen.
+ 
+ // Import der Solana SDK ComputeBudget Module direkt 
+-pub use solana_sdk::compute_budget::ComputeBudgetInstruction;
++pub use solana_sdk::compute_budget::{ComputeBudgetInstruction, ComputeBudget};
+ 
+ // Compute Units Management
+ pub use solana_program::compute_budget;

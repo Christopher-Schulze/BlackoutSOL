@@ -1,0 +1,20 @@
+--- solana_imports.rs.old	2025-05-16 20:33:00
++++ solana_imports.rs	2025-05-16 20:33:30
+@@ -5,14 +5,13 @@
+ //! nur an einer Stelle aktualisiert werden müssen.
+ 
+ // Import der Solana SDK ComputeBudget Module direkt 
+-pub use solana_sdk::compute_budget::{ComputeBudgetInstruction, ComputeBudget};
+-
+-// Compute Units Management
+-pub use solana_program::compute_budget;
++pub use solana_sdk::compute_budget::ComputeBudgetInstruction;
+ 
+ // In Solana 1.18.26 ist sol_remaining_compute_units im compute_units-Modul
+ pub use solana_program::compute_units::sol_remaining_compute_units;
+ 
++// Re-Export des compute_budget-Moduls von Solana SDK für mögliche direkte Verwendung
++pub use solana_sdk::compute_budget;
+ // Standard program Importe
+ pub use anchor_lang::solana_program::program::invoke;
+ pub use anchor_lang::solana_program::program::invoke_signed;

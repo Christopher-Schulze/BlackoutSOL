@@ -1,0 +1,18 @@
+[package]
+name = "blackout-benchmark"
+version = "0.1.0"
+edition = "2021"
+description = "Benchmark tools for BlackoutSOL rent efficiency"
+authors = ["Blackout Team"]
+
+[dependencies]
+anchor-lang = "0.27.0"
+solana-program = "1.14.17"
+solana-program-test = "1.14.17"
+solana-sdk = "1.14.17"
+blackout = { path = "../../programs/blackout", features = ["no-entrypoint"] }
+tokio = { version = "1.28.1", features = ["full"] }
+
+[[bin]]
+name = "cost_efficiency_benchmark"
+path = "cost_efficiency_benchmark.rs"

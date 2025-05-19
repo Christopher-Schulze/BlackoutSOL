@@ -1,0 +1,11 @@
+--- poseidon_validator.rs.old	2025-05-16 20:26:00
++++ poseidon_validator.rs	2025-05-16 20:26:30
+@@ -133,7 +133,7 @@
+ pub fn generate_zk_hash(inputs: &[&[u8]]) -> anchor_lang::Result<[u8; 32]> {
+     core::generate_hash(inputs)
+         .map_err(|e| {
+-            msg!("Poseidon-Hashing fehlgeschlagen: {:?}", e);
++            anchor_lang::solana_program::msg!("Poseidon-Hashing fehlgeschlagen: {:?}", e);
+             crate::errors::BlackoutError::HashingError.into()
+         })
+ }

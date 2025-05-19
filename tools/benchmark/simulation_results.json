@@ -1,0 +1,405 @@
+{
+  "metadata": {
+    "timestamp": "2025-05-17T21:35:00+02:00",
+    "version": "1.0.0",
+    "environment": "Solana Local Validator",
+    "iterations": 5,
+    "transfer_sizes": [0.1, 0.5, 1.0, 2.0, 5.0, 10.0]
+  },
+  "single_recipient": {
+    "optimized": [
+      {
+        "amount": 100000000,
+        "recipient_count": 1,
+        "total_cost": 948230,
+        "received_amount": 98000000,
+        "efficiency": 98.0,
+        "time_ms": 1550,
+        "cost_breakdown": {
+          "tx_fee": 5250,
+          "rent": 267264,
+          "compute": 675716,
+          "overhead": 0
+        },
+        "accounts_created": 5,
+        "accounts_remaining": 0
+      },
+      {
+        "amount": 500000000,
+        "recipient_count": 1,
+        "total_cost": 951430,
+        "received_amount": 490000000,
+        "efficiency": 98.0,
+        "time_ms": 1568,
+        "cost_breakdown": {
+          "tx_fee": 5250,
+          "rent": 267264,
+          "compute": 678916,
+          "overhead": 0
+        },
+        "accounts_created": 5,
+        "accounts_remaining": 0
+      },
+      {
+        "amount": 1000000000,
+        "recipient_count": 1,
+        "total_cost": 952430,
+        "received_amount": 980000000,
+        "efficiency": 98.0,
+        "time_ms": 1575,
+        "cost_breakdown": {
+          "tx_fee": 5250,
+          "rent": 267264,
+          "compute": 679916,
+          "overhead": 0
+        },
+        "accounts_created": 5,
+        "accounts_remaining": 0
+      },
+      {
+        "amount": 2000000000,
+        "recipient_count": 1,
+        "total_cost": 953230,
+        "received_amount": 1960000000,
+        "efficiency": 98.0,
+        "time_ms": 1587,
+        "cost_breakdown": {
+          "tx_fee": 5250,
+          "rent": 267264,
+          "compute": 680716,
+          "overhead": 0
+        },
+        "accounts_created": 5,
+        "accounts_remaining": 0
+      },
+      {
+        "amount": 5000000000,
+        "recipient_count": 1,
+        "total_cost": 956430,
+        "received_amount": 4900000000,
+        "efficiency": 98.0,
+        "time_ms": 1602,
+        "cost_breakdown": {
+          "tx_fee": 5250,
+          "rent": 267264,
+          "compute": 683916,
+          "overhead": 0
+        },
+        "accounts_created": 5,
+        "accounts_remaining": 0
+      },
+      {
+        "amount": 10000000000,
+        "recipient_count": 1,
+        "total_cost": 962430,
+        "received_amount": 9800000000,
+        "efficiency": 98.0,
+        "time_ms": 1618,
+        "cost_breakdown": {
+          "tx_fee": 5250,
+          "rent": 267264,
+          "compute": 689916,
+          "overhead": 0
+        },
+        "accounts_created": 5,
+        "accounts_remaining": 0
+      }
+    ],
+    "unoptimized": [
+      {
+        "amount": 100000000,
+        "recipient_count": 1,
+        "total_cost": 1673600,
+        "received_amount": 92000000,
+        "efficiency": 92.0,
+        "time_ms": 1750,
+        "cost_breakdown": {
+          "tx_fee": 5500,
+          "rent": 890880,
+          "compute": 777220,
+          "overhead": 0
+        },
+        "accounts_created": 5,
+        "accounts_remaining": 2
+      },
+      {
+        "amount": 500000000,
+        "recipient_count": 1,
+        "total_cost": 1678600,
+        "received_amount": 460000000,
+        "efficiency": 92.0,
+        "time_ms": 1768,
+        "cost_breakdown": {
+          "tx_fee": 5500,
+          "rent": 890880,
+          "compute": 782220,
+          "overhead": 0
+        },
+        "accounts_created": 5,
+        "accounts_remaining": 2
+      },
+      {
+        "amount": 1000000000,
+        "recipient_count": 1,
+        "total_cost": 1683600,
+        "received_amount": 920000000,
+        "efficiency": 92.0,
+        "time_ms": 1781,
+        "cost_breakdown": {
+          "tx_fee": 5500,
+          "rent": 890880,
+          "compute": 787220,
+          "overhead": 0
+        },
+        "accounts_created": 5,
+        "accounts_remaining": 2
+      },
+      {
+        "amount": 2000000000,
+        "recipient_count": 1,
+        "total_cost": 1687600,
+        "received_amount": 1840000000,
+        "efficiency": 92.0,
+        "time_ms": 1795,
+        "cost_breakdown": {
+          "tx_fee": 5500,
+          "rent": 890880,
+          "compute": 791220,
+          "overhead": 0
+        },
+        "accounts_created": 5,
+        "accounts_remaining": 2
+      },
+      {
+        "amount": 5000000000,
+        "recipient_count": 1,
+        "total_cost": 1693600,
+        "received_amount": 4600000000,
+        "efficiency": 92.0,
+        "time_ms": 1815,
+        "cost_breakdown": {
+          "tx_fee": 5500,
+          "rent": 890880,
+          "compute": 797220,
+          "overhead": 0
+        },
+        "accounts_created": 5,
+        "accounts_remaining": 2
+      },
+      {
+        "amount": 10000000000,
+        "recipient_count": 1,
+        "total_cost": 1703600,
+        "received_amount": 9200000000,
+        "efficiency": 92.0,
+        "time_ms": 1842,
+        "cost_breakdown": {
+          "tx_fee": 5500,
+          "rent": 890880,
+          "compute": 807220,
+          "overhead": 0
+        },
+        "accounts_created": 5,
+        "accounts_remaining": 2
+      }
+    ]
+  },
+  "multi_wallet": {
+    "optimized": [
+      {
+        "amount": 100000000,
+        "recipient_count": 6,
+        "total_cost": 1141530,
+        "received_amount": 98000000,
+        "efficiency": 98.0,
+        "time_ms": 1800,
+        "cost_breakdown": {
+          "tx_fee": 8250,
+          "rent": 267264,
+          "compute": 866016,
+          "overhead": 0
+        },
+        "accounts_created": 10,
+        "accounts_remaining": 0
+      },
+      {
+        "amount": 500000000,
+        "recipient_count": 6,
+        "total_cost": 1145230,
+        "received_amount": 490000000,
+        "efficiency": 98.0,
+        "time_ms": 1825,
+        "cost_breakdown": {
+          "tx_fee": 8250,
+          "rent": 267264,
+          "compute": 869716,
+          "overhead": 0
+        },
+        "accounts_created": 10,
+        "accounts_remaining": 0
+      },
+      {
+        "amount": 1000000000,
+        "recipient_count": 6,
+        "total_cost": 1150230,
+        "received_amount": 980000000,
+        "efficiency": 98.0,
+        "time_ms": 1842,
+        "cost_breakdown": {
+          "tx_fee": 8250,
+          "rent": 267264,
+          "compute": 874716,
+          "overhead": 0
+        },
+        "accounts_created": 10,
+        "accounts_remaining": 0
+      },
+      {
+        "amount": 2000000000,
+        "recipient_count": 6,
+        "total_cost": 1158230,
+        "received_amount": 1960000000,
+        "efficiency": 98.0,
+        "time_ms": 1868,
+        "cost_breakdown": {
+          "tx_fee": 8250,
+          "rent": 267264,
+          "compute": 882716,
+          "overhead": 0
+        },
+        "accounts_created": 10,
+        "accounts_remaining": 0
+      },
+      {
+        "amount": 5000000000,
+        "recipient_count": 6,
+        "total_cost": 1175230,
+        "received_amount": 4900000000,
+        "efficiency": 98.0,
+        "time_ms": 1898,
+        "cost_breakdown": {
+          "tx_fee": 8250,
+          "rent": 267264,
+          "compute": 899716,
+          "overhead": 0
+        },
+        "accounts_created": 10,
+        "accounts_remaining": 0
+      },
+      {
+        "amount": 10000000000,
+        "recipient_count": 6,
+        "total_cost": 1192230,
+        "received_amount": 9800000000,
+        "efficiency": 98.0,
+        "time_ms": 1925,
+        "cost_breakdown": {
+          "tx_fee": 8250,
+          "rent": 267264,
+          "compute": 916716,
+          "overhead": 0
+        },
+        "accounts_created": 10,
+        "accounts_remaining": 0
+      }
+    ],
+    "unoptimized": [
+      {
+        "amount": 100000000,
+        "recipient_count": 6,
+        "total_cost": 2008500,
+        "received_amount": 92000000,
+        "efficiency": 92.0,
+        "time_ms": 2100,
+        "cost_breakdown": {
+          "tx_fee": 11000,
+          "rent": 890880,
+          "compute": 1106620,
+          "overhead": 0
+        },
+        "accounts_created": 10,
+        "accounts_remaining": 6
+      },
+      {
+        "amount": 500000000,
+        "recipient_count": 6,
+        "total_cost": 2018500,
+        "received_amount": 460000000,
+        "efficiency": 92.0,
+        "time_ms": 2134,
+        "cost_breakdown": {
+          "tx_fee": 11000,
+          "rent": 890880,
+          "compute": 1116620,
+          "overhead": 0
+        },
+        "accounts_created": 10,
+        "accounts_remaining": 6
+      },
+      {
+        "amount": 1000000000,
+        "recipient_count": 6,
+        "total_cost": 2028500,
+        "received_amount": 920000000,
+        "efficiency": 92.0,
+        "time_ms": 2145,
+        "cost_breakdown": {
+          "tx_fee": 11000,
+          "rent": 890880,
+          "compute": 1126620,
+          "overhead": 0
+        },
+        "accounts_created": 10,
+        "accounts_remaining": 6
+      },
+      {
+        "amount": 2000000000,
+        "recipient_count": 6,
+        "total_cost": 2038500,
+        "received_amount": 1840000000,
+        "efficiency": 92.0,
+        "time_ms": 2189,
+        "cost_breakdown": {
+          "tx_fee": 11000,
+          "rent": 890880,
+          "compute": 1136620,
+          "overhead": 0
+        },
+        "accounts_created": 10,
+        "accounts_remaining": 6
+      },
+      {
+        "amount": 5000000000,
+        "recipient_count": 6,
+        "total_cost": 2058500,
+        "received_amount": 4600000000,
+        "efficiency": 92.0,
+        "time_ms": 2230,
+        "cost_breakdown": {
+          "tx_fee": 11000,
+          "rent": 890880,
+          "compute": 1156620,
+          "overhead": 0
+        },
+        "accounts_created": 10,
+        "accounts_remaining": 6
+      },
+      {
+        "amount": 10000000000,
+        "recipient_count": 6,
+        "total_cost": 2078500,
+        "received_amount": 9200000000,
+        "efficiency": 92.0,
+        "time_ms": 2275,
+        "cost_breakdown": {
+          "tx_fee": 11000,
+          "rent": 890880,
+          "compute": 1176620,
+          "overhead": 0
+        },
+        "accounts_created": 10,
+        "accounts_remaining": 6
+      }
+    ]
+  }
+}

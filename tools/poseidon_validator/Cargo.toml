@@ -1,0 +1,15 @@
+[package]
+name = "blackout_poseidon_validator"
+version = "0.1.0"
+description = "Validierungstool für Poseidon-Parameter in BlackoutSOL"
+edition = "2021"
+
+[[bin]]
+name = "validate_poseidon"
+path = "src.rs"
+
+[dependencies]
+solana-program = { version = "1.14.17", features = ["default"] }
+solana-poseidon = "2.2.14" 
+hex = "0.4.3"
+rand = { version = "0.8.5", default-features = false, features = ["small_rng","alloc"] }

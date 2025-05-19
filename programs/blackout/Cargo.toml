@@ -1,0 +1,78 @@
+[package]
+name = "blackout"
+version = "0.1.0"
+description = "Privacy-Payment System for Solana - Advanced Zero-Knowledge Privacy Solution"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "blackout"
+
+[features]
+# Features for the original Anchor integration
+default = []
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+ultra = []
+anchor-debug = []
+
+# Optional modules
+include-cmd = []
+
+# Verification features
+verification = []
+
+[dependencies]
+anchor-lang = "0.29.0"
+# Updated to 1.18.26 (not 2.x to avoid breaking changes)
+solana-program = { version = "1.18.26", features = ["default"] }
+# Direct Solana SDK for ComputeBudget access
+solana-sdk = "1.18.26"
+bytemuck = { version = "1.13.1", features = ["derive"] }
+thiserror = "1.0.40"
+# Dependencies for cryptographic operations and PDA validation
+solana-poseidon = "2.2.14" # For Poseidon hashing
+arrayref = "0.3.7" # For array_ref and array_refs
+rand = { version = "0.8.5", default-features = false, features = ["small_rng","alloc"] } # For random number generation
+subtle = "2.4.1" # For constant-time comparisons (ConstantTimeEq)
+num-bigint = "0.4.4" # For BigUint
+curve25519-dalek = { version = "4.1.1", features = ["digest", "rand_core"] } # For cryptographic operations
+merlin = "3.0.0" # For Transcript
+hex = "0.4.3" # For hex representation
+bs58 = "0.4.0" # For Base58 encoding/decoding
+# Local dependency for Poseidon
+blackout_poseidon = { path = "../../poseidon_standalone", features = ["anchor_compat"] }
+# For logging and error handling
+log = "0.4.17"
+# For serialization/deserialization
+borsh = "0.10.3"
+# For hashing
+sha2 = "0.10.7"
+# For base64 encoding/decoding
+base64 = "0.21.0"
+
+[dev-dependencies]
+tokio = { version = "1.27.0", features = ["full"] }
+solana-program-test = "1.18.26"
+sha2 = "0.10.7"
+solana-poseidon = "2.2.14" # Base library for Poseidon hashing
+blackout_poseidon = { path = "../../poseidon_standalone", features = ["anchor_compat"] } # Standalone Poseidon module with Anchor compatibility
+rand = { version = "0.8.5", default-features = false, features = ["small_rng","alloc"] }
+rand_distr = "0.4.3"
+hmac = "0.12.1"
+subtle = "2.4.1" # Changed to version compatible with solana-program-test
+arrayref = "0.3.7"
+num-bigint = "0.4.4"
+num-traits = "0.2.16"
+bincode = { version = "1.3.3", default-features = false }
+num-integer = "0.1.45"
+bitvec = "1.0.1"
+blake3 = "1.5.0"
+merlin = "3.0.0"
+curve25519-dalek = { version = "4.1.1", features = ["digest", "rand_core"] }
+# poseidon-rs = "0.0.10"  # removed due to rand 0.4 dependency incompatible with BPF
+serde = { version = "1.0.189", features = ["derive"] }
+borsh = "0.10.3"
+hex = "0.4.3" # For hex representation in tests

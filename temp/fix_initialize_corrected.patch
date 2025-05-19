@@ -1,0 +1,9 @@
+--- initialize.rs.old	2025-05-16 20:30:00
++++ initialize.rs	2025-05-16 20:30:30
+@@ -11,7 +11,6 @@
+     verify_hyperplonk_proof,
+     verify_range_proof,
+     generate_bloom_filter,
+-    extract_splits,
+     calculate_fees,
+ };

@@ -1,0 +1,12 @@
+[package]
+name = "poseidon_validator"
+version = "0.1.0"
+edition = "2021"
+description = "Validierungs-Tool für Poseidon-Parameter"
+authors = ["BlackoutSOL"]
+
+[dependencies]
+solana-poseidon = "2.2.14"
+hex = "0.4.3"
+clap = { version = "4.0", features = ["derive"] }
+base64 = "0.21.0"

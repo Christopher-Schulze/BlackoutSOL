@@ -1,0 +1,58 @@
+@startuml BlackoutSOL Architecture Overview
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+' ==== Styles ====
+skinparam backgroundColor #FFFFFF
+skinparam componentStyle uml2
+
+' ==== Legend ====
+legend right
+  <b>Legend</b>
+  --
+  Component
+  Database
+  External System
+  --
+  <color:#0000FF>Flow 1</color>
+  <color:#FF0000>Flow 2</color>
+  <color:#00AA00>Flow 3</color>
+endlegend
+
+' ==== System Boundary ====
+System_Boundary(blackout, "BlackoutSOL") {
+    ' ==== Main Components ====
+    Container(program, "Blackout Program", "Rust, Anchor", "Core program logic")
+    Container(zk_proofs, "ZK Proof System", "Zero-Knowledge Proofs", "Generates and verifies ZK proofs")
+    Container(poseidon, "Poseidon Hash", "Cryptography", "ZK-friendly hashing")
+    Container(state, "State Management", "Rust", "Manages program state")
+    
+    ' ==== Database ====
+    ContainerDb(db, "State Accounts", "Solana Accounts", "Stores program state and data")
+    
+    ' ==== Internal Relationships ====
+    Rel(program, zk_proofs, "Validates proofs", "JSON")
+    Rel(program, poseidon, "Uses for hashing", "Function calls")
+    Rel(program, state, "Manages", "Rust structs")
+    Rel(state, db, "Persists to", "Account data")
+}
+
+' ==== External Systems ====
+System_Ext(solana, "Solana Blockchain", "Hosts the program")
+System_Ext(wallet, "User Wallet", "Initiates transactions")
+System_Ext(indexer, "Blockchain Indexer", "Indexes transactions")
+
+' ==== External Relationships ====
+Rel(wallet, program, "Sends transactions", "JSON-RPC")
+Rel(program, solana, "Interacts with", "Solana Program Interface")
+Rel(indexer, solana, "Indexes", "Blockchain data")
+
+' ==== Notes ====
+note right of program
+  <b>Key Features:</b>
+  - Anonymous transfers
+  - Batch processing
+  - ZK-proof verification
+  - Secure state management
+end note
+
+@enduml

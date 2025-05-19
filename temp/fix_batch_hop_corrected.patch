@@ -1,0 +1,37 @@
+--- batch_hop.rs.old	2025-05-16 20:35:00
++++ batch_hop.rs	2025-05-16 20:35:30
+@@ -205,14 +205,17 @@
+     
+     // Execute the batch hop with parallel execution for maximum efficiency
+     // Processing occurs in a single pass to save CPU cycles
+-    msg!("Starting parallel batch hop execution for {} splits", splits.len());
++    msg!("Starting parallel batch hop execution for {} splits", splits.len());
++    
++    // Erstelle temporäre Kopien aller Referenzen um Borrowing-Konflikte zu vermeiden
++    let transfer_state_info = ctx.accounts.transfer_state.to_account_info();
++    let system_program_info = ctx.accounts.system_program.to_account_info();
++    let current_hop = ctx.accounts.transfer_state.current_hop;
++    let seed = ctx.accounts.transfer_state.seed;
++    let bump = ctx.accounts.transfer_state.bump;
++    let fake_bloom = ctx.accounts.transfer_state.fake_bloom;
+     
+     parallel_batch_execution(
+-        &ctx.accounts.transfer_state.to_account_info(),
+-        &ctx.accounts.system_program.to_account_info(),
+-        &splits,
+-        &pda_accounts,
+-        ctx.accounts.transfer_state.current_hop,
+-        &ctx.accounts.transfer_state.seed,
+-        ctx.accounts.transfer_state.bump,
++        &transfer_state_info,
++        &system_program_info,
++        &splits,
++        &pda_accounts,
++        current_hop,
++        &seed,
++        bump,
+         ctx.program_id,
+         // Adding bloom filter for constant lookup time in fake split verification
+-        &ctx.accounts.transfer_state.fake_bloom,
++        &fake_bloom,
+     )?;

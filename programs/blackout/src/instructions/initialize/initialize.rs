@@ -1,0 +1,217 @@
+use anchor_lang::prelude::*;
+use anchor_lang::solana_program::program::invoke;
+// Use the correct import path for ComputeBudgetInstruction in Solana 1.14.17
+// In this version, it is part of solana_sdk
+use anchor_lang::solana_program;
+use anchor_lang::solana_program::system_instruction;
+use anchor_lang::solana_program::sysvar::clock::Clock;
+
+use crate::state::*;
+use crate::errors::BlackoutError;
+use crate::utils::{
+    verify_hyperplonk_proof,
+    verify_range_proof,
+    generate_bloom_filter,
+    extract_splits,
+    calculate_fees,
+};
+
+/// Context for initializing an anonymous transfer
+#[derive(Accounts)]
+pub struct Initialize<'info> {
+    #[account(mut)]
+    pub payer: Signer<'info>,
+    
+    #[account(
+        init,
+        payer = payer,
+        space = TransferState::SIZE,
+        seeds = [b"transfer", payer.key().as_ref()],
+        bump
+    )]
+    pub transfer_state: Account<'info, TransferState>,
+    
+    /// CHECK: This is the recipient who receives the payment only after all hops
+    pub recipient: UncheckedAccount<'info>,
+    
+    /// CHECK: This is the Merkle root for wallet set verification
+    #[account()]
+    pub merkle_root_account: UncheckedAccount<'info>,
+    
+    pub system_program: Program<'info, System>,
+    
+    pub clock: Sysvar<'info, Clock>,
+}
+
+pub fn initialize(
+    ctx: Context<Initialize>,
+    amount: u64,
+    hyperplonk_proof: [u8; 128],
+    range_proof: [u8; 128],
+    challenge: [u8; 32],
+    merkle_proof: Vec<u8>,
+) -> Result<()> {
+    // Set compute unit limit
+    let cu_limit_ix = solana_program::instruction::ComputeBudgetInstruction::set_compute_unit_limit(400_000);
+    invoke(
+        &cu_limit_ix,
+        &[ctx.accounts.payer.to_account_info()],
+    )?;
+    
+    // Old compute unit check removed as it's superseded by a later check and used an outdated API.
+    
+    // Basic validation of the amount
+    if amount == 0 {
+        msg!("Amount must be greater than 0");
+        return Err(BlackoutError::InvalidAmount.into());
+    }
+    
+    // Check if sender and recipient are different
+    if ctx.accounts.payer.key() == ctx.accounts.recipient.key() {
+        msg!("Sender and recipient must be different");
+        return Err(BlackoutError::InvalidRecipient.into());
+    }
+    
+    // Use fixed Blackout configuration
+    let config = BlackoutConfig::new();
+    
+    // Check challenge data
+    if challenge == [0; 32] {
+        msg!("Invalid challenge data");
+        return Err(BlackoutError::InvalidChallenge.into());
+    }
+    
+    // Extract Merkle root for wallet set
+    let mut merkle_root = [0u8; 32];
+    merkle_root.copy_from_slice(&ctx.accounts.merkle_root_account.key().to_bytes()[0..32]);
+    
+    // Store bump for the PDA - adjusted for Anchor 0.29.0
+    // In newer Anchor versions, `bumps` is a HashMap-like object
+    let bump = ctx.bumps.transfer_state;
+    
+    // Generate seed for stealth PDAs (deterministic from challenge + payer)
+    let seed = Pubkey::find_program_address(
+        &[
+            b"blackout",
+            &challenge,
+            ctx.accounts.payer.key().as_ref(),
+        ],
+        ctx.program_id,
+    ).0.to_bytes();
+    
+    // Generate bloom filter for fake splits
+    let fake_bloom = generate_bloom_filter(&config, &challenge);
+    
+    // Dummy commitments (will be set later)
+    let commitments = [[0; 32]; 8];
+    
+    // Validate HyperPlonk proof with extended log data
+    msg!("Validating HyperPlonk proof for anonymous transfers...");
+    if let Err(err) = verify_hyperplonk_proof(&hyperplonk_proof, &challenge) {
+        msg!("HyperPlonk proof validation failed: {:?}", err);
+        return Err(err);
+    }
+    msg!("HyperPlonk proof successfully validated");
+    
+    // Verify range proof for secure amount distribution
+    msg!("Validating range proof for amount distribution...");
+    if let Err(err) = verify_range_proof(&range_proof, &commitments, &challenge) {
+        msg!("Range proof validation failed: {:?}", err);
+        return Err(err);
+    }
+    msg!("Range proof successfully validated");
+    
+    // Calculate fees
+    let (total_fee, reserve) = calculate_fees(amount, &config)?;
+    
+    // Total amount to transfer (real transaction + reserve + fees)
+    let total_amount = amount + total_fee + reserve;
+    
+    // Check if the payer has enough lamports
+    if ctx.accounts.payer.lamports() < total_amount {
+        msg!("Insufficient lamports: {} < {}", ctx.accounts.payer.lamports(), total_amount);
+        return Err(BlackoutError::InsufficientLamports.into());
+    }
+    
+    // Initialize transfer state with the extended data
+    let mut transfer_state = &mut ctx.accounts.transfer_state;
+    
+    // Initialize TransferState with double dereferencing to get from Account<'_, TransferState> type to TransferState type
+    **transfer_state = TransferState::new(
+        ctx.accounts.payer.key(),
+        amount,
+        seed,
+        bump,
+        ctx.accounts.recipient.key(),
+        config,
+        hyperplonk_proof,
+        range_proof,
+        challenge,
+        merkle_root,
+        fake_bloom,
+        ctx.accounts.clock.unix_timestamp, // Pass current timestamp
+    );
+    
+    // Store fees and reserve
+    transfer_state.total_fees = total_fee;
+    transfer_state.reserve = reserve;
+    
+    // Deposit lamports into the transfer state
+    let transfer_ix = system_instruction::transfer(
+        &ctx.accounts.payer.key(),
+        &ctx.accounts.transfer_state.key(),
+        total_amount,
+    );
+    invoke(
+        &transfer_ix,
+        &[
+            ctx.accounts.payer.to_account_info(),
+            ctx.accounts.transfer_state.to_account_info(),
+            ctx.accounts.system_program.to_account_info(),
+        ],
+    )?;
+    
+    // 4. Check remaining compute units (optional, for debugging)
+    // This check can be removed in production to save compute units.
+    // It helps ensure that the transaction has enough CUs left after the main logic.
+    let remaining_cus = solana_program::log::sol_remaining_compute_units();
+    const MIN_REMAINING_CUS_THRESHOLD: u64 = 20_000; // Example threshold, adjust as needed
+    if remaining_cus < MIN_REMAINING_CUS_THRESHOLD { 
+        msg!("Warning: Low CUs after initialization. Remaining: {}. Threshold: {}", 
+             remaining_cus, MIN_REMAINING_CUS_THRESHOLD);
+    }
+    
+    // 5. Emit event for successful initialization
+    msg!("Transfer initialized: {} lamports, 4 hops, 4 real splits, 44 fake splits", 
+         amount);
+    msg!("Fees: {} lamports, Reserve: {} lamports", total_fee, reserve);
+    msg!("Total possible: {} paths", config.total_paths());
+    
+    // Emit event
+    emit!(TransferInitialized {
+        owner: ctx.accounts.payer.key(),
+        recipient: ctx.accounts.recipient.key(),
+        amount,
+        total_amount,
+        num_hops: config.num_hops,
+        real_splits: config.real_splits,
+        fake_splits: config.fake_splits,
+        total_paths: config.total_paths(),
+        transfer_state: ctx.accounts.transfer_state.key(),
+    });
+    
+    Ok(())
+}
+
+#[event]
+pub struct TransferInitialized {
+    pub owner: Pubkey,
+    pub recipient: Pubkey,
+    pub amount: u64,
+    pub total_amount: u64,
+    pub num_hops: u8,
+    pub real_splits: u8,
+    pub fake_splits: u8,
+    pub total_paths: u64,
+    pub transfer_state: Pubkey,
+}

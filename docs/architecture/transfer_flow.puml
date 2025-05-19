@@ -1,0 +1,79 @@
+@startuml BlackoutSOL Transfer Flow
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+' ==== Styles ====
+skinparam backgroundColor #FFFFFF
+skinparam componentStyle uml2
+
+' ==== Components ====
+Component(user, "User", "Initiates transfer")
+Component(ui, "UI/CLI", "User Interface")
+Component(api, "API Layer", "Handles requests")
+Component(transfer, "Transfer Module", "Manages transfer logic")
+Component(zk, "ZK Prover", "Generates proofs")
+Component(poseidon, "Poseidon", "ZK hashing")
+Component(ledger, "Solana Ledger", "Blockchain storage")
+
+' ==== Transfer Flow ====
+== 1. Initiate Transfer ==
+user -> ui: Fill transfer details
+ui -> api: POST /transfer
+activate api
+api -> transfer: validate_inputs()
+activate transfer
+transfer -> api: ValidationResult
+deactivate transfer
+
+== 2. Generate ZK Proof ==
+api -> zk: generate_proof(transfer_data)
+activate zk
+zk -> poseidon: calculate_commitment()
+activate poseidon
+poseidon --> zk: commitment_hash
+zk -> zk: generate_range_proof()
+zk --> api: zk_proof
+deactivate zk
+
+== 3. Submit Transaction ==
+api -> transfer: create_transaction(zk_proof)
+activate transfer
+transfer -> ledger: submit_transaction(tx)
+activate ledger
+ledger --> transfer: tx_receipt
+transfer --> api: TransferResult
+deactivate transfer
+api --> ui: Transfer initiated
+
+== 4. Process Hops (Async) ==
+loop For each hop
+    transfer -> zk: verify_hop_proof()
+    activate zk
+    zk --> transfer: verification_result
+    deactivate zk
+    
+    alt Verification successful
+        transfer -> ledger: execute_hop()
+        ledger --> transfer: hop_receipt
+    else Verification failed
+        transfer -> transfer: handle_failed_hop()
+    end
+end
+
+== 5. Finalize Transfer ==
+transfer -> ledger: finalize_transfer()
+ledger --> transfer: final_receipt
+transfer -> api: TransferCompleted
+api -> ui: Transfer completed
+
+deactivate api
+
+' ==== Notes ====
+note right of transfer
+  <b>Security Checks:</b>
+  - Input validation
+  - Proof verification
+  - State consistency
+  - Fee calculation
+end note
+
+@enduml

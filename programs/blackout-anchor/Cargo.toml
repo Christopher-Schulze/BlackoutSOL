@@ -1,0 +1,24 @@
+[package]
+name = "blackout-anchor"
+version = "0.1.0"
+description = "Anchor Framework Integration for BlackoutSOL"
+edition = "2021"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[features]
+default = []
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+anchor-debug = []
+
+[dependencies]
+anchor-lang = "0.29.0"
+blackout = { path = "../blackout", features = ["no-entrypoint"] }
+
+[dev-dependencies]
+proptest = "1.0.0"

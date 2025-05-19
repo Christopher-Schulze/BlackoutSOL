@@ -1,0 +1,13 @@
+[package]
+name = "poseidon_tester"
+version = "0.1.0"
+edition = "2021"
+description = "Standalone tester for Poseidon functionality"
+
+[workspace]
+
+[dependencies]
+solana-poseidon = "2.2.14"
+curve25519-dalek = "4.1.3"
+num-bigint = "0.4.4"
+hex = "0.4.3"
